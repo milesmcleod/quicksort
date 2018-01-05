@@ -1,4 +1,5 @@
 require "quick_sort"
+require 'byebug'
 
 describe QuickSort do
   describe "partition" do

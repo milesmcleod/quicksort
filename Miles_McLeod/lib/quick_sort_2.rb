@@ -23,25 +23,29 @@ class QuickSort
   # In-place.
   def self.sort2!(array, start = 0, length = array.length, &prc)
     prc ||= Proc.new { |x, y| x > y ? 1 : -1 }
-    return if length <= 1
+    return array if length <= 1
     pivot_idx = QuickSort.partition(array, start, length, &prc)
-    QuickSort.sort2!(array, start, pivot_idx - start, &prc)
+    QuickSort.sort2!(array, 0, pivot_idx, &prc)
     QuickSort.sort2!(array, pivot_idx + 1, length - pivot_idx - 1, &prc)
+    array
   end
 
   def self.partition(array, start, length, &prc)
-    # debugger
     prc ||= Proc.new { |x, y| x > y ? 1 : -1 }
-    pivot_el_idx = start
-    idx = start + 1
-    while idx < start + length
-      if prc.call(array[pivot_el_idx], array[idx]) == 1
-        array[pivot_el_idx + 1], array[idx] = array[idx], array[pivot_el_idx + 1]
-        array[pivot_el_idx], array[pivot_el_idx + 1] = array[pivot_el_idx + 1], array[pivot_el_idx]
-        pivot_el_idx = pivot_el_idx + 1
+    pivot_idx = start
+    pivot = array[start]
+    i = start + 1
+    while i < start + length
+      check = prc.call(pivot, array[i])
+      if check == 1 && i != pivot_idx + 1
+        array[i], array[pivot_idx + 1] = array[pivot_idx + 1], array[i]
+        pivot_idx += 1
+      elsif check == 1
+        pivot_idx += 1
       end
-      idx += 1
+      i += 1
     end
-    pivot_el_idx
+    array[start], array[pivot_idx] = array[pivot_idx], array[start]
+    pivot_idx
   end
 end
